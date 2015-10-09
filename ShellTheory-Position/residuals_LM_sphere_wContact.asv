@@ -1,4 +1,4 @@
-function [r] = residuals_LM_sphere(X)
+function [r] = residuals_LM_sphere_wContact(X)
  % The number of discrete points in the first region
 global N;
 global I;
@@ -40,7 +40,11 @@ r=zeros([2*N+2*I, 1]);
 %     rs(ii)= H/(cos(X(ii)));
 % end
 
+    function [pContact] = contactPressure(r, phi, lambda, H, P)
+        pContact = lambda * (r*co
 
+
+    end
 %##########################################################################
 % Contact Region
 
@@ -51,6 +55,8 @@ r(1,1)=phi(1);
 % r(N+1, 1) = dxidzeta1*(-3*rs(1) + 4*rs(2) - rs(3))/(2*delta1);
 % r(N+1,1)=rs(1)-1;
 r(N+1,1)=dxidzeta1 * (-3*rs(1) + 4*rs(2) - rs(3))/(2*delta1);
+
+
 
 for ii = 2:N-1; %Using central difference
     xi = (ii-1)*delta1; %is actually xi

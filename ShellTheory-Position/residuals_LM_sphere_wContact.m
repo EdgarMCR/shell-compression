@@ -1,4 +1,4 @@
-function [r] = residuals_LM_sphere(X)
+function [r] = residuals_LM_sphere_wContact(X)
  % The number of discrete points in the first region
 global N;
 global I;
@@ -10,6 +10,8 @@ global I;
 global P;
 global zetac;
 
+global lambda;
+global H;
 
 global E; %Youngs Modulus
 global nu; %Poission ratio
@@ -40,7 +42,14 @@ r=zeros([2*N+2*I, 1]);
 %     rs(ii)= H/(cos(X(ii)));
 % end
 
-
+    function [pContact] = contactPressure(r, phi, lambda, H, P)
+        if lambda <=1;
+            pContact =  + lambda * (r*cos(phi) - H) + ( 1-lambda)*(r-1);
+        else
+            pContact = + lambda * (r*cos(phi) - H);
+        end
+%         pContact = P;
+    end
 %##########################################################################
 % Contact Region
 
@@ -51,6 +60,8 @@ r(1,1)=phi(1);
 % r(N+1, 1) = dxidzeta1*(-3*rs(1) + 4*rs(2) - rs(3))/(2*delta1);
 % r(N+1,1)=rs(1)-1;
 r(N+1,1)=dxidzeta1 * (-3*rs(1) + 4*rs(2) - rs(3))/(2*delta1);
+
+
 
 for ii = 2:N-1; %Using central difference
     xi = (ii-1)*delta1; %is actually xi
@@ -63,7 +74,8 @@ for ii = 2:N-1; %Using central difference
     phic1=dxidzeta1*(phi(ii+1) -phi(ii-1))/(2*delta1);
     phic11= dxidzeta1^2 *(phi(ii+1) - 2*phi(ii) +phi(ii-1))/delta1^2;
     
-    pContact=P;
+%     [pContact] = contactPressure(rs(ii), phi(ii), lambda, H, P);
+    pContact = (rs(ii)*cos(phi(ii)) - H);
     [reqn, phieqn , ~, ~, ~, ~ ] = linearElasticity_Shell( rs(ii), rc1, rc11, phi(ii), phic1, phic11, zeta, pContact );
     
     r(ii, 1) = phieqn;

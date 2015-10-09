@@ -60,8 +60,8 @@ if(xGiven==0)
     X(2*N + I + 1 : 2*N + 2*I, 1) = Data(Nh:length(Data), 3); 
 end
 
-func =@residuals_LM_sphere; fprintf('\n Using %s as residue. \n', 'residuals_LM_sphere');
-% func =@residuals_compressedSphere; fprintf('\n Using %s as residue. \n', 'residuals_compressedSphere');
+% func =@residuals_LM_sphere; fprintf('\n Using %s as residue. \n', 'residuals_LM_sphere');
+func =@residuals_LM_sphere_wContact; fprintf('\n Using %s as residue. \n', 'residuals_LM_sphere_wContact.m');
 
 
 [Y]= finite_diff_Jacobian(X, func);
@@ -98,23 +98,24 @@ for kk=1:I;
     z2(kk)=Y(2*N+I+kk) * cos(Y(2*N+kk));
     x2(kk)=Y(2*N+I+kk) * sin(Y(2*N+kk));
 end
-
+global lambda;
 p=P;
 h1=figure(); %set(gcf,'Visible', 'off'); 
 % plot(Y(1:N,1), Y(N+1:2*N,1), 'ro-')
 plot(x1, z1, 'ro-')
 hold on;
 plot(x2, z2, 'bs-')
-titleString=sprintf('Solution Inflated Sphere w/ LM Np=%d p=%.2e', Np, p);
+titleString=sprintf('Solution Sphere w/ LM Np=%d p=%.2e lambda=%.2f', Np, p, lambda);
 title(titleString,'FontSize', 16)
 xlabel('x','FontSize', 16)
 ylabel('z','FontSize', 16)
 xlimR=xlim;
 xmax=xlimR(2)*1.2;
-xlim([0 1.49])
-ylim([0 1.49])
+xlim([0 1.09]); ylim([0 1.09]); %xlim([0 1.49]); ylim([0 1.49]);
+
 % filename=sprintf('InflatedSphere\\Plot_Solution_InflatedSphere_Np=%04d.png',L);
-filename=sprintf('LM_Sphere\\Plot_Solution_InflatedSphere_Np=%d_p=%.2e.png',Np, p);
+
+filename=sprintf('LM_Sphere\\Plot_Solution_Np=%d_p=%.2e_lambda=%.2f.png',Np, p, lambda);
 print(h1,filename, '-dpng')
 
 e = cputime-t;

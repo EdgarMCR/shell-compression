@@ -3,7 +3,7 @@ function[] = runScript_LM_sphere(Np, p, zetacz)
 % Np = str2num(Np)
 % p = str2num(p)
 global H;
-H=0.9;
+H=0.95;
 
 global lambda;
 lambda=0;
@@ -15,32 +15,28 @@ close all;
 path='sol_LM_sphere.txt';
 % length(X)
 
-% [r] = residuals_compressedSphere(X);
-% area= H^2 * ( tan(X(round(Np/2),1)) + pi/4) ;
-% fprintf(' residue = %.4e \t area = %.4e \n',  residueNorm(r, pi/2), area);
-global zetac;
 zetac=zetacz;
 Y=problem_LM_sphere(Np,  p, X, path, 1, path);
 fprintf('\n');
 
 
-% pstep=0.01;
-for ii=1:10
-    if ii <3;
-        p=p+1;
-    else
-        p=p+1;
-    end
-    fprintf('%d th run with p=%f \n', ii, p);
-    Y=problem_LM_sphere(Np,  p, Y, path, 1, path);
-    fprintf('\n');
-end
 
-% lambdaStep=0.00001;
-% for ii=1:10
+% for ii=1:2
+%     if ii <3;
+%         p=p+1;
+%     else
+%         p=p+1;
+%     end
+%     fprintf('%d th run with p=%f \n', ii, p);
+%     Y=problem_LM_sphere(Np,  p, Y, path, 1, path);
+%     fprintf('\n');
+% end
+
+% lambdaStep=1;
+% for ii=1:20
 %     lambda=lambda+lambdaStep;
 %     fprintf('%d th run with lambda=%f \n', ii, lambda);
-%     Y2=problem_LM_sphere(Np,  p, 0, path, 1, path);
+%     Y=problem_LM_sphere(Np,  p, Y, path, 1, path);
 %     fprintf('\n');
 % end
 
